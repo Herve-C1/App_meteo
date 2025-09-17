@@ -1,31 +1,28 @@
-let btn = document.getElementById("btn");
-let input = document.getElementById("ville");
-let resultat = document.getElementById("resultat");
+const apiKey = "583cd3dc0148b2707404bdf88ca06662"; // Mets ta clé OpenWeatherMap ici
 
-// ⚠️ Mets ici ta propre clé API OpenWeatherMap
-const apiKey = "583cd3dc0148b2707404bdf88ca06662";
+document.getElementById("btn").addEventListener("click", () => {
+  let ville = document.getElementById("ville").value;
 
-btn.addEventListener("click", async () => {
-    let ville = input.value;
-    if (!ville) {
-        resultat.textContent = "⚠️ Entrez une ville.";
+  fetch(`https://api.openweathermap.org/data/2.5/weather?q=${ville}&appid=${apiKey}&units=metric&lang=fr`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.cod === "404") {
+        document.getElementById("resultat").textContent = "Ville non trouvée ❌";
         return;
-    }
+      }
 
-    try {
-        let response = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?q=${ville}&appid=${apiKey}&units=metric&lang=fr`
-        );
+      // Afficher météo
+      document.getElementById("resultat").textContent =
+        `🌡️ ${data.main.temp}°C | ${data.weather[0].description}`;
+      
+      let icon = document.getElementById("icon");
+      icon.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+      icon.style.display = "inline";
 
-        if (!response.ok) {
-            throw new Error("Ville non trouvée !");
-        }
-
-        let data = await response.json();
-        console.log(data); // Pour voir tout l’objet JSON en console
-
-        resultat.textContent = `🌍 ${data.name} : ${data.main.temp}°C, ${data.weather[0].description}`;
-    } catch (error) {
-        resultat.textContent = "❌ Erreur : " + error.message;
-    }
+      // ✅ Ajouter marqueur sur la carte
+      let lat = data.coord.lat;
+      let lon = data.coord.lon;
+      ajouterMarqueurCarte(lat, lon, ville, data.main.temp);
+    })
+    .catch(error => console.error("Erreur API :", error));
 });

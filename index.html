@@ -2,17 +2,36 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Météo avec Fetch</title>
+  <title>Météo & Carte</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Leaflet CSS (librairie pour la carte) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
-  <h1>🌤️ Application Météo</h1>
-  
-  <input id="ville" type="text" placeholder="Entrez une ville">
-  <button id="btn">Rechercher</button>
-  
-  <p id="resultat"></p>
+  <h1>🌤️ Application Météo & 🌍 Carte du Monde</h1>
 
+  <!-- Navigation -->
+  <nav>
+    <button onclick="afficherOnglet('meteo')">Météo</button>
+    <button onclick="afficherOnglet('carte')">Carte</button>
+  </nav>
+
+  <!-- Section météo -->
+  <section id="meteo" class="onglet actif">
+    <input id="ville" type="text" placeholder="Entrez une ville">
+    <button id="btn">Rechercher</button>
+    <p id="resultat"></p>
+    <img id="icon" alt="Icône météo" style="display:none; width:80px;">
+  </section>
+
+  <!-- Section carte -->
+  <section id="carte" class="onglet">
+    <div id="map" style="height: 500px; width: 80%; margin: auto;"></div>
+  </section>
+
+  <!-- Scripts -->
   <script src="meteo.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
